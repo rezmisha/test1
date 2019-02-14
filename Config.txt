@@ -1,0 +1,4 @@
+#comment
+testDirPath = "C:\\work"
+driverDirPath = "C:\\work"
+testVer = "all, full"
