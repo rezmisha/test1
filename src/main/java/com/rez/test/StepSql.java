@@ -65,7 +65,6 @@ public class StepSql extends StepOne {
             ((TestThread)Thread.currentThread()).testDataMaster.testData.put(rs.getMetaData().getColumnName(i),testData);
         }
     }
-
 }
 
 //http://java-online.ru/jdbc-resultset.xhtml
