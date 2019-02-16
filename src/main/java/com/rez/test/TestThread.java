@@ -14,6 +14,8 @@ public class TestThread extends Thread  {
 
     public String testName;
 
+    public AdminMaster admin;
+
     TestThread(String testName)
     {
         super(testName);
@@ -25,9 +27,8 @@ public class TestThread extends Thread  {
         String fileName;
         try {
 
-            AdminMaster admin = new AdminMaster();
+            admin = new AdminMaster();
             fileName = MainClass.testList.get(number).file;
-            //System.out.println(" !!!!!!!! nnnnnnnnn=  "+number);
             testName = fileName;
             admin.setup(fileName);
             //admin.tearDown();

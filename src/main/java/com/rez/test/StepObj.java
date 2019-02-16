@@ -1,7 +1,9 @@
 package com.rez.test;
 
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.Select;
 
 public class StepObj extends StepOne {
@@ -45,10 +47,19 @@ public class StepObj extends StepOne {
             return false;
         }
 
-    /*if (action_type.equals("mouseOver")) {
-        webElement.mouseOver();
-        return true;
-    }*/
+        /*if (action_type.equals("mouseOver")) {
+            //Actions actions = new Actions(driver);
+            //actions.moveToElement(element).build().perform();
+            webElement.mouseOver();
+            return true;
+        }*/
+
+        if (action_type.equals("moveTo")) {
+            Actions actions = new Actions((WebDriver) getDriver());  //!!!!!!1
+            actions.moveToElement(webElement).build().perform();
+            return true;
+        }
+
 
         if (action_type.equals("sendKeys")) {
             webElement.clear();

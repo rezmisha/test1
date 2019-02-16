@@ -15,6 +15,12 @@ public class TestStep {
 
     public TestStep stepError = null;
 
+    public AdminMaster admin = ((TestThread)Thread.currentThread()).admin;;
+
+    /*public void TestStep (){
+       // admin = ((TestThread)Thread.currentThread()).admin;
+    }*/
+
     //значения по умолчаню  нуж но ли?
     public void newStepSet (Properties p) {
         tagsList = p;
@@ -51,7 +57,19 @@ public class TestStep {
 
     public void logError(String s) {
         Log.errorCount++;
+        //Log.logError(stackStr() + "Ошибка: " + tagsList.get("name") + " " + s);
         Log.logError("Ошибка: " + tagsList.get("name") + " " + s);
+    }
+
+    public String stackStr () {
+        String s = "";
+        String sp = "";
+        for ( int i=0; i<admin.currentStackPos; i++ )
+        {
+            s += sp + admin.logErrorStack.get(i) + System.getProperty("line.separator");
+            sp += "   ";
+        }
+        return s;
     }
 
     // подстановка переменных значениями.

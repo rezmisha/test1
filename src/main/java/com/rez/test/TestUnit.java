@@ -12,10 +12,9 @@ public class TestUnit extends TestStep {
     public Map<String, String> fieldList = new HashMap<String, String>();
 
 
-
     @Override
     public String do_step(int testNum) throws Exception {
-
+        admin.currentStackPos++;
         String rezs = "";
 
         if (tagsList.containsKey("loopType") && tagsList.get("loopType").equals("FullCheckFalse"))
@@ -27,6 +26,7 @@ public class TestUnit extends TestStep {
         if (tagsList.containsKey("loopType") && tagsList.get("loopType").equals(""))
             rezs =  do_stepLoop(testNum);
 
+        admin.currentStackPos--;
         //!!  обработка выхода!!!!
         if (rezs.equals("break") || rezs.equals(tagsList.get("name")) )
             return "MyOk13";
@@ -137,7 +137,9 @@ public class TestUnit extends TestStep {
     public void setLoopIter(String unitName, int num)
     {
         ((TestThread)Thread.currentThread()).testDataMaster.loopStek.put(unitName,num);
-        Log.logOk("Цикл " + unitName + " итерация: " + num);
+        String s = "Цикл " + unitName + " итерация: " + num;
+        //admin.logErrorStack.set(admin.currentStackPos, s);
+        Log.logOk(s);
     }
 
     public void makeLoopFieldList(){

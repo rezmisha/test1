@@ -128,8 +128,6 @@ public class StepWeb extends StepObj {
         }
 
 
-
-
         //obj_seach_type = (String) tagsList.get("obj_seach_type");
 
         if (getTagsList("command").equals("not_exist")) {
@@ -224,12 +222,14 @@ public class StepWeb extends StepObj {
         }
 
         WebElement element;
-
+        Boolean notDisplayed = false;
+        if (getTagsList("notDisplayed").equals("1"))
+            notDisplayed = true;
 // проверка на видимость
         for (int i=0;i<listElements.size();i++) {
 
             element = (WebElement) listElements.get(i);
-            if (element.isDisplayed() ) {  //!!! true
+            if (element.isDisplayed() || notDisplayed) {  //!!! true
                 listElementsDisplay.add(listElements.get(i));
             }
         }

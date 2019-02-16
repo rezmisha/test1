@@ -42,7 +42,7 @@ public  class Log {
     }
 
     // удаление старых логов
-    public static void thread_init() throws  Exception{
+    public static void thread_init_() throws  Exception{
 
         String logErrorFileName = Thread.currentThread().getName() + ".txt";
         FileWriter writerErrorOne = new FileWriter(Config.testDirPath + File.separator + logErrorFileName, false);
