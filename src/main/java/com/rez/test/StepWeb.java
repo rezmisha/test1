@@ -72,7 +72,10 @@ public class StepWeb extends StepObj {
         driver = (WebDriver) getDriver();
         if (getTagsList("command").equals("get")) {  //убрать!!!!!
             try {
-                driver.get("http://" + getTestData(testNum) ); //!!
+                String s = getTestData(testNum);
+                if (s.indexOf("http") != 0)
+                    s = "http://" + s;
+                driver.get(s); //!!
             }
             catch (Exception e) {} //!!
             return true;

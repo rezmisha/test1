@@ -89,7 +89,7 @@ public class TestStep {
     }
 
     public void putData (String dataStr) {
-        ((TestThread)Thread.currentThread()).testDataMaster.putData(getTagsList("todata"), dataStr);
+        ((TestThread)Thread.currentThread()).testDataMaster.putData(getTagsList("toData"), dataStr);
     }
 
 }

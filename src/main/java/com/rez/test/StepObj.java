@@ -113,13 +113,22 @@ public class StepObj extends StepOne {
             return true;
         }*/
 
-        if (action_type.equals("getText")) {
+        if (action_type.equals("equalsText")) {
             String text = webElement.getText();
             return equalsText(text, testNum);
         }
 
-        if (!(getTagsList("todata")).equals("")) {
+        if (action_type.equals("getText")) {
             putData(webElement.getText());
+            return true;
+        }
+
+        if (action_type.equals("equalsValue")) {
+            String text = webElement.getAttribute("value");
+            return equalsText(text, testNum);
+        }
+        if (action_type.equals("getValue")) {
+            putData(webElement.getAttribute("value"));
             return  true;
         }
 
