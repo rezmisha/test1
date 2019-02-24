@@ -1,0 +1,225 @@
+Запуск
+команда
+java -Dfile.encoding=UTF-8 -jar test1.jar Config.txt
+
+вместо Config.txt может файл с любым именем, содержащим конфигурацию для запуска тестов.
+
+ 
+---------------------------------------
+Файл конфигурации
+
+testDirPath = "C:\\test" - директория, где находятся тесты (путь к файлу testListFile)
+driverDirPath = "C:\\test\drivers" - директория с драйверами
+(скачать от сюда http://chromedriver.chromium.org/downloads)
+
+logDirPath = "C:\\test\logs" - директория, куда будут писаться логи
+testListFile = "test_list.xml" - файл со списком тестов
+maxThreadCount = "3" - параметр, задающий количество потоков, для исполнения тестов
+
+
+
+--------------------------------------
+Файл со списком тестов:
+
+Задаются названия xml-файлов с тестами без расширения
+Названия повторятся не должны!
+// - комментарии
+
+#test("test1")  ver="full, not all"
+#test("test2")
+#test("test3")
+.............
+#test("testN")
+
+Тесты будут исполняться по очереди, паралелльно в нескольких потоках.
+Количество потоков задается параметром maxThreadCount файла конфигурации.
+
+
+-------------------------------
+Файл с блоками (lib.xml)
+
+Файл состоит из блоков 
+вида:
+<include_unit name = "вход простой">
+	инструкции шагов
+	........................
+	........................
+</include_unit>
+
+такие блоки нужны для выполнения одинакого набора шагов в разных  местах теста
+
+В файлах с тестами на месте инструкции #include("Имя Блока") будет подставлен соответствующий фрагмент include_unit 
+Иструкция #include("Имя Блока") может быть вложеная.
+
+
+пример файла lib.xml
+
+<note>
+
+<include_unit name = "вход простой">
+	<web name="algoritmlab.ru/ вход каталог" command="get" data="%catalogUrl%" />
+	<inc>#include("логин/пароль")</inc>
+	<web  name="кнопка Вход" target="name=logBtn"  command="click"  blockExitName="1"  />
+	<web  name="Проверка основной страницы" target="xpath=/html/body/div/h2"  command="getText"  data="Категории" blockExitName="1"  />
+</include_unit>
+
+
+<include_unit name = "логин/пароль">
+	<web  name="логин" target="name=login"  command="sendKeys"  blockExitName="1"  />
+	<web  name="пароль" target="name=pass"  command="sendKeys"  blockExitName="1"  />
+</include_unit>
+
+
+</note>
+
+------------------------------------------------------
+
+Задание переменных
+В файле с тестами:
+создание переменной login со значением  "misha1@mail.ru"
+<data set="login=misha1@mail.ru" />
+
+В файле data.xml
+Создаются два массива Ответ и Вопрос для цикла "Список" (задает параметр unit)
+<note>
+	
+	<Ответ unit="Список">Ответ1, Ответ2, Ответ3, Ответ4, Ответ5</Ответ>
+	<Вопрос unit="Список">Вопрос1, Вопрос2, Вопрос3, Вопрос4, Вопрос5</Вопрос>	
+
+</note>
+
+с помощью параметра toData
+<web  name="Ссылка" target="xpath=//div[2]/div[1]/input"  command="getValue"  toData="test_url" /> 
+создается переменная test_url, в которею заноситься значение Value найденного элемента (или значение text при command="getText")
+ 
+
+Для получение значение имя переменной  нужно заключать в символы подстановки % 
+например:
+<web name="Окно теста" command="get" data="%test_url%" />
+
+
+
+-------------------------------------------------
+открытие страницы
+<web name="лента" command="get" data="lenta.ru" />
+
+возврат на предыдущую страницу
+<web name="назад" command="back" />
+
+
+поиск элемента по target
+target типы поиска: name, xpath, className, id, cssSelector ,linkText ,partialLinkText
+для поиска первого элемента параметр get_first="1"
+для поиска невидимого элемента параметр notDisplayed="1"
+
+<web name="name" target="xpath=/html/body/div/div[1]" command="sendKeys" blockExitName="0" data="Миша" get_first="1" notDisplayed="1" wait="2"/>
+
+данные для шага берутся из параметра data, если поля нет, то из массива данных c именем name
+параметр wait задает время (в секундах) в течении которого происходит поиск элемента
+
+выполнение команды - параметр command
+
+click - клик
+sendKeys - очищает поле и вносит текст
+isSelected - проверяет, что элемент выбран
+isNotSelected - проверяет, что элемент не выбран
+
+Выборы значения из списка
+selectByVisibleText
+selectByValue
+selectByIndex
+
+Получение первого выбранного значения в списке
+getFirstSelectedOption
+
+equalsText
+Сравнивает текст элемента с датой
+<web name="name" target="name=name" command="equalsText" data="Петя" />
+
+ 
+
+exist
+проверка на наличие элемента / отсутствие
+<web name="проверка сообщения ок" target="name=ok" command="exist/not_exist" />
+
+ 
+
+Параметр blockExitName - действие при при ошибке
+blockExitName="0" - сценарий не меняется
+blockExitName="имя цикла" - выход из заданного цикла
+Ели цикла с таким именем нет, то происходит выход из теста
+
+blockExitName="break" выход из ближайшего цикла 
+blockExitName="continue" переход к следующей итерации ближайшего цикла
+blockExitName="error" переход к блоку error ближайшего цикла
+
+ 
+
+ЦИКЛЫ
+Циклы могут быть вложенными
+
+
+loopCount - количество итераций
+Для каждого шага в цикле данные из массива с именем, заданным в теге "name"
+<unit name="Список" loopCount="5" loopType="" >
+		<web name="Вопрос" target="xpath=//*[@id='1']/div[2]/input" command="sendKeys" blockExitName="1" wait="2" />
+		<web name="Ответ" target="xpath=//*[@id='2']/div[2]/input" command="sendKeys" blockExitName="1" wait="2" />
+		<web name="Добавить" target="xpath=//*[@id='3']/div[2]/button" command="click" blockExitName="1" wait="2" />
+</unit>
+
+В файле данных:
+<Ответ unit="Список">Ответ1, Ответ2, Ответ3, Ответ4, Ответ5</Ответ>
+<Вопрос unit="Список">Вопрос1, Вопрос2, Вопрос3, Вопрос4, Вопрос5</Вопрос>
+
+ 
+
+
+цикл по найденным элементам
+loopType="AllElements"
+Для каждого найденного в теге unit элемента выполняется действие из этого тега и затем все строчки из тела цикла
+<unit name="delAllTest" loopCount="1" loopType="AllElements" target="cssSelector=.delete-icon" command="click" >
+	<web name="delete" target="cssSelector=.sss" command="click" blockExitName="1" notDisplayed="1" wait="2" /> 
+	<web name="delete OK" target="cssSelector=.btn" command="click" blockExitName="1" wait="2" />
+	<wait data="500" />
+</unit>
+
+блок <error>
+Переход в блок происходит при ошибке в шаге с blockExitName="error"
+<unit name="вход негатив" data="" loopCount="7" loopType="" >
+<inc>#include("логин/пароль")</inc>
+<web name="кнопка Вход" target="name=logBtn" command="click" blockExitName="1" />
+<web name="Проверка сообщения об ошибке" target="xpath=/html/body/div/div[1]" command="equalsText" data="Ошибка: Неверный логин или пароль" blockExitName="error" wait="0" />
+<error name="error block" data="" loopCount="1" loopType="">
+<web name="deleteAllCookies" command="deleteAllCookies" />
+<web name="algoritmlab.ru/all/fashion/category.php" command="get" data="%catalogUrl%" />
+</error>
+</unit>
+
+
+
+остановка до ввода символа пользователем 
+<stop/>
+
+задержка в миллисекундах
+<wait data="1000" />
+
+------------------
+куки
+Установление значение кука
+<web name="setCookies" command="setCookies" data="login=admin" />
+удаление всех куков
+<web name="deleteAllCookies" command="deleteAllCookies" />
+
+
+---------------------------------------
+alert
+Получение и сравнение текста из алерта
+<web name="alertDismiss" target="alert" command="getText" data="111" />
+Подтверждение
+<web name="Подтверждение" target="alert" command="accept" />
+Отмена
+<web name="Отмена" target="alert" command="dismiss" />
+
+ 
+
+ 
