@@ -55,8 +55,20 @@ public class StepObj extends StepOne {
         }*/
 
         if (action_type.equals("moveTo")) {
-            Actions actions = new Actions((WebDriver) getDriver());  //!!!!!!1
+            Actions actions = new Actions((WebDriver) getDriver(driverName));  //!!!!!!1
             actions.moveToElement(webElement).build().perform();
+            return true;
+        }
+
+        if (action_type.equals("allClick")) {
+            Actions actions = new Actions((WebDriver) getDriver(driverName));  //!!!!!!1
+            actions.click();
+            return true;
+        }
+
+        if (action_type.equals("allSendKeys")) {
+            Actions actions = new Actions((WebDriver) getDriver(driverName));  //!!!!!!1
+            actions.sendKeys(getTestData(testNum));
             return true;
         }
 
@@ -80,7 +92,7 @@ public class StepObj extends StepOne {
             }
             if (action_type.equals("selectByIndex")) {
                 Select select = new Select(webElement);
-                select.selectByVisibleText(getTestData(testNum));
+                select.selectByIndex(Integer.parseInt( getTestData(testNum)));
                 return true;
             }
             if (action_type.equals("getFirstSelectedOption")) {

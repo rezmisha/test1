@@ -68,8 +68,10 @@ public class StepWeb extends StepObj {
         //boolean ok = false;
         //String obj_seach_type;
         logOk("");
-        driverName = "WebChrom";
-        driver = (WebDriver) getDriver();
+        driverName = getTagsList("driverName");
+        if (driverName.equals(""))
+            driverName = "WebChrom";
+        driver = (WebDriver) getDriver(driverName);
         if (getTagsList("command").equals("get")) {  //убрать!!!!!
             try {
                 String s = getTestData(testNum);

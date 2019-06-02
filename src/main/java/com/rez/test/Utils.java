@@ -29,7 +29,8 @@ public class Utils {
                 if (!comStrBegin.equals("") && (line.trim()).indexOf(comStrBegin)==0)
                     continue;
                 //проверка версии
-                String includeVer = getCutStr(line, "ver=\"", "\"");
+                String includeVer = getCutStr(line, " ver=\"", "\"");
+                //includeVer = getCutStr(line, "\"ver=\"", "\""); - для xml
                 if (!includeVer.equals(""))
                     if (!Config.checkVer(includeVer))
                         continue;

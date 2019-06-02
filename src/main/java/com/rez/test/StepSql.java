@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+//import com.microsoft.sqlserver.jdbc.*;
 
 public class StepSql extends StepOne {
 
@@ -15,12 +16,27 @@ public class StepSql extends StepOne {
     public String do_step(int testNum) throws Exception {
 
         Sql_connect sql_connect = Global.sqlCcnnectList.get(tagsList.get("sql_connect"));
-        String queryStr = incVar("query");
+        //String queryStr;// ВРЕМЕНО!!! = incVar("query");
+        String queryStr = getTagsList("query");
+        String url = "";
 
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            String url = sql_connect.driver + "://" + sql_connect.url + "/" + sql_connect.base;
+            if (sql_connect.driver.equals("jdbc:sqlserver")) {
+                //Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+                // jdbc:sqlserver://<server>:<port>;databaseName=AdventureWorks;user=<user>;password=<password>";
+
+               // DriverManager.registerDriver(new com.microsoft.sqlserver.jdbc.SQLServerDriver());
+                //url = sql_connect.driver + "://" + sql_connect.url + ";" + sql_connect.base;
+            }
+            if (sql_connect.driver.equals("jdbc:mysql")) {
+                Class.forName("com.mysql.jdbc.Driver");
+                url = sql_connect.driver + "://" + sql_connect.url + "/" + sql_connect.base;
+            }
+            //if (sql_connect.driver.equals("postgresql"))
+            //Class.forName("org.postgresql.Driver");
+           // com.microsoft.sqlserver.jdbc;
             Connection con = DriverManager.getConnection(url, sql_connect.login, sql_connect.password);
+
             try {
                 Statement stmt = con.createStatement();
                 System.out.println(queryStr);

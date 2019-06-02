@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class StepOne extends TestStep {
 
-    public String driverName;
+    //public String driverName;
 
     public String blockExitNameDefault= "0";
 
@@ -35,7 +35,7 @@ public class StepOne extends TestStep {
             return testDataMaster.getTestData(this);*/
     }
 
-    public  Object getDriver() throws Exception {
+    public  Object getDriver(String driverName) throws Exception {
         Object driver;
         driver = ((TestThread)Thread.currentThread()).driverManager.getDriver(driverName);
         if (driver != null)

@@ -63,8 +63,10 @@ public class TestUnit extends TestStep {
 
         step.tagsList = (Properties) (this.tagsList.clone());
         step.makeTarget();
-        step.driverName = "WebChrom"; //!!
-        step.driver = (WebDriver) step.getDriver();
+        driverName = getTagsList("driverName"); //!!
+        if (driverName.equals(""))
+            driverName = "WebChrom";
+        step.driver = (WebDriver) step.getDriver(driverName);
 
         listElements = step.SearchElement();
 
@@ -139,7 +141,8 @@ public class TestUnit extends TestStep {
         ((TestThread)Thread.currentThread()).testDataMaster.loopStek.put(unitName,num);
         String s = "Цикл " + unitName + " итерация: " + num;
         //admin.logErrorStack.set(admin.currentStackPos, s);
-        Log.logOk(s);
+        logOk(s);
+        //Log.logOk(s);
     }
 
     public void makeLoopFieldList(){

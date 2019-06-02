@@ -15,7 +15,9 @@ public class TestStep {
 
     public TestStep stepError = null;
 
-    public AdminMaster admin = ((TestThread)Thread.currentThread()).admin;;
+    public AdminMaster admin = ((TestThread)Thread.currentThread()).admin;
+
+    public String driverName;
 
     /*public void TestStep (){
        // admin = ((TestThread)Thread.currentThread()).admin;
@@ -52,26 +54,35 @@ public class TestStep {
     }
 
     public void logOk(String s) {
-        Log.logOk(tagsList.get("name") + " " + s);
+        Log.logOk(stackStr() + tagsList.get("name") + " " + s);
     }
 
     public void logError(String s) {
         Log.errorCount++;
-        //Log.logError(stackStr() + "Ошибка: " + tagsList.get("name") + " " + s);
-        Log.logError("Ошибка: " + tagsList.get("name") + " " + s);
+        Log.logError(stackErrorStr() + "Ошибка: " + tagsList.get("name") + " " + s);
+        //Log.logError("Ошибка: " + tagsList.get("name") + " " + s);
     }
 
     public String stackStr () {
-        String s = "";
+        String sp = "";
+        for ( int i=0; i<admin.currentStackPos; i++ )
+        {
+            sp += "   ";
+        }
+        return sp;
+    }
+
+    public String stackErrorStr () {
+        return "";
+        /*String s = "";
         String sp = "";
         for ( int i=0; i<admin.currentStackPos; i++ )
         {
             s += sp + admin.logErrorStack.get(i) + System.getProperty("line.separator");
             sp += "   ";
         }
-        return s;
+        return s;*/
     }
-
     // подстановка переменных значениями.
     public   String incVar(String name) throws Exception {
 
